@@ -1,0 +1,3 @@
+# reason we add a new file is to add a custom step to our build
+# different dependencies for development (involves linting, testing, etc) and actual project dependencies
+flake8>=3.9.2,<3.10
