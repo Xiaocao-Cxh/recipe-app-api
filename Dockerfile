@@ -1,9 +1,9 @@
-FROM python:3.9-alpine3.13 
+FROM python:3.9-alpine3.13
 # python is the base image, 3.9-alpine3.13 is the tag, and alpine is a lightweight linux distribution
-LABEL maintainer="caoxuhang.com" 
+LABEL maintainer="caoxuhang.com"
 # metadata
 
-ENV PYTHONBUFFERED 1 
+ENV PYTHONBUFFERED 1
 # environment variable, 1 means true and 0 means false
 # 1 allows python to run in unbuffered mode, meaning it doesn't buffer the outputs but prints them directly
 
@@ -25,7 +25,7 @@ RUN python -m venv /py && \
     /py/bin/pip install -r /tmp/requirements.txt && \
     # install all the dependencies in the virtual environment
     if [ "$DEV" = "true" ]; \
-        then /py/bin/pip install -r /tmp/requirements.dev.txt; \ 
+        then /py/bin/pip install -r /tmp/requirements.dev.txt; \
     fi && \
     # shell script to install the dev dependencies if the argument DEV is true
     rm -rf /tmp && \
