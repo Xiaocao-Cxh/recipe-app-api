@@ -1,5 +1,5 @@
 """
-Tests for recpie APIs.
+Tests for recipe APIs.
 """
 from decimal import Decimal
 
@@ -25,7 +25,7 @@ RECIPES_URL = reverse('recipe:recipe-list')
 
 
 def detail_url(recipe_id):
-    """Create and return a detail URL."""
+    """Create and return a recipe detail URL."""
     return reverse('recipe:recipe-detail', args=[recipe_id])
 
 
@@ -50,7 +50,7 @@ def create_user(**params):
 
 
 class PublicRecipeAPITests(TestCase):
-    """Test Authenticated API requests."""
+    """Test unauthenticated API requests."""
 
     def setUp(self):
         self.client = APIClient()
@@ -62,8 +62,8 @@ class PublicRecipeAPITests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class PrivateRecipeAPITests(TestCase):
-    """Test Authenticated API requests."""
+class PrivateRecipeApiTests(TestCase):
+    """Test authenticated API requests."""
 
     def setUp(self):
         self.client = APIClient()
@@ -79,12 +79,11 @@ class PrivateRecipeAPITests(TestCase):
 
         recipes = Recipe.objects.all().order_by('-id')
         serializer = RecipeSerializer(recipes, many=True)
-
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
 
-    def test_retrieve_recipes_limited_to_user(self):
-        """Test retrieving recipes for user."""
+    def test_recipe_list_limited_to_user(self):
+        """Test list of recipes is limited to authenticated user."""
         other_user = create_user(email='other@example.com', password='test123')
         create_recipe(user=other_user)
         create_recipe(user=self.user)
@@ -96,7 +95,7 @@ class PrivateRecipeAPITests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
 
-    def test_retrieve_recipe_detail(self):
+    def test_get_recipe_detail(self):
         """Test get recipe detail."""
         recipe = create_recipe(user=self.user)
 
@@ -123,11 +122,11 @@ class PrivateRecipeAPITests(TestCase):
 
     def test_partial_update(self):
         """Test partial update of a recipe."""
-        original_link = 'http://example.com/recipe.pdf'
+        original_link = 'https://example.com/recipe.pdf'
         recipe = create_recipe(
             user=self.user,
             title='Sample recipe title',
-            link=original_link
+            link=original_link,
         )
 
         payload = {'title': 'New recipe title'}
@@ -145,13 +144,13 @@ class PrivateRecipeAPITests(TestCase):
         recipe = create_recipe(
             user=self.user,
             title='Sample recipe title',
-            link='http://example.com/recipe.pdf',
-            description='Sample recipe description',
+            link='https://example.com/recipe.pdf',
+            description='Sample recipe description.',
         )
 
         payload = {
             'title': 'New recipe title',
-            'link': 'http://example.com/new-recipe.pdf',
+            'link': 'https://example.com/new-recipe.pdf',
             'description': 'New recipe description',
             'time_minutes': 10,
             'price': Decimal('2.50'),
@@ -201,10 +200,10 @@ class PrivateRecipeAPITests(TestCase):
     def test_create_recipe_with_new_tags(self):
         """Test creating a recipe with new tags."""
         payload = {
-            'title': 'THai Prawn Curry',
+            'title': 'Thai Prawn Curry',
             'time_minutes': 30,
             'price': Decimal('2.50'),
-            'tag': [{'name': 'Thai'}, {'name': 'Dinner'}],
+            'tags': [{'name': 'Thai'}, {'name': 'Dinner'}],
         }
         res = self.client.post(RECIPES_URL, payload, format='json')
 
