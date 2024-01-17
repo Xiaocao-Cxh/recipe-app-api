@@ -1,5 +1,5 @@
 """
-Tests for models
+Tests for models.
 """
 from decimal import Decimal
 
@@ -10,12 +10,12 @@ from core import models
 
 
 def create_user(email='user@example.com', password='testpass123'):
-    """Create and return a new user."""
+    """Create a return a new user."""
     return get_user_model().objects.create_user(email, password)
 
 
 class ModelTests(TestCase):
-    """Tests for models"""
+    """Tests models."""
 
     def test_create_user_with_email_successful(self):
         """Test creating a new user with an email is successful"""
