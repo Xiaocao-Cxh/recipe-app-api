@@ -9,13 +9,13 @@ from core.models import (
 )
 
 
-# class TagSerializer(serializers.ModelSerializer):
-#     """Serializer for tags."""
+class TagSerializer(serializers.ModelSerializer):
+    """Serializer for tags."""
 
-#     class Meta:
-#         model = Tag
-#         fields = ['id', 'name']
-#         read_only_fields = ['id']
+    class Meta:
+        model = Tag
+        fields = ['id', 'name']
+        read_only_fields = ['id']
 
 
 class RecipeSerializer(serializers.ModelSerializer):

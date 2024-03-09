@@ -3,7 +3,7 @@ FROM python:3.9-alpine3.13
 LABEL maintainer="caoxuhang.com"
 # metadata
 
-ENV PYTHONBUFFERED 1
+ENV PYTHONUNBUFFERED 1
 # environment variable, 1 means true and 0 means false
 # 1 allows python to run in unbuffered mode, meaning it doesn't buffer the outputs but prints them directly
 
@@ -24,7 +24,7 @@ RUN python -m venv /py && \
         build-base postgresql-dev musl-dev && \
     /py/bin/pip install -r /tmp/requirements.txt && \
     # install all the dependencies in the virtual environment
-    if [ "$DEV" = "true" ]; \
+    if [ $DEV = "true" ]; \
         then /py/bin/pip install -r /tmp/requirements.dev.txt; \
     fi && \
     # shell script to install the dev dependencies if the argument DEV is true
