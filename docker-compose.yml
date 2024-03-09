@@ -1,48 +1,35 @@
 version: "3.9"
-# version of docker-compose syntax
 
 services:
   app:
-  # name of the service
     build:
       context: .
       args:
         - DEV=true
-    # build the image from the current directory
     ports:
       - "8000:8000"
-    # map the port 8000 of the container to the port 8000 of the host machine
-    # this is how we can access the container from the host machine
     volumes:
       - ./app:/app
-    # mapping the current directory to the app directory in the container
-    # local updates will be reflected in the container
     command: >
       sh -c "python manage.py wait_for_db &&
              python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8000"
-    # command that runs the server
     environment:
       - DB_HOST=db
       - DB_NAME=devdb
       - DB_USER=devuser
       - DB_PASS=changeme
-    # environment variables for the container
     depends_on:
       - db
 
   db:
     image: postgres:13-alpine
-    # use the postgres image from docker hub
     volumes:
       - dev-db-data:/var/lib/postgresql/data
-    # map the volume dev-db-data to the postgres data directory
     environment:
       - POSTGRES_DB=devdb
       - POSTGRES_USER=devuser
       - POSTGRES_PASSWORD=changeme
-    # set the environment variables for the postgres image
 
 volumes:
   dev-db-data:
-  # name of the volume
