@@ -19,7 +19,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class RecipeSerializer(serializers.ModelSerializer):
-    """Serializer for recipses."""
+    """Serializer for recipes."""
     tags = TagSerializer(many=True, required=False)
 
     class Meta:
@@ -28,7 +28,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
     def _get_or_create_tags(self, tags, recipe):
-        """Get or create tag."""
+        """Handle getting or creating tags as needed."""
         auth_user = self.context['request'].user
         for tag in tags:
             tag_obj, created = Tag.objects.get_or_create(
@@ -36,7 +36,6 @@ class RecipeSerializer(serializers.ModelSerializer):
                 **tag,
             )
             recipe.tags.add(tag_obj)
-
 
     def create(self, validated_data):
         """Create a recipe."""
