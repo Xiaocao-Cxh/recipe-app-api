@@ -1,0 +1,15 @@
+{
+  "title": "Recipe 1",
+  "time_minutes": 100,
+  "price": "2.50",
+  "link": "example.com",
+  "tags": [
+    {
+      "name": "tag1"
+    },
+    {
+      "name": "tag2"
+    }
+  ],
+  "description": "Sample description"
+}
