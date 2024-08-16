@@ -7,6 +7,7 @@ from drf_spectacular.utils import (
     OpenApiParameter,
     OpenApiTypes,
 )
+
 from rest_framework import (
     viewsets,
     mixins,
@@ -31,13 +32,13 @@ from recipe import serializers
             OpenApiParameter(
                 'tags',
                 OpenApiTypes.STR,
-                description='Comma separated list of IDs to filter',
+                description='Comma separated list of tag IDs to filter',
             ),
             OpenApiParameter(
                 'ingredients',
                 OpenApiTypes.STR,
                 description='Comma separated list of ingredient IDs to filter',
-            )
+            ),
         ]
     )
 )
@@ -49,7 +50,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def _params_to_ints(self, qs):
-        """Convert a list of string to integers."""
+        """Convert a list of strings to integers."""
         return [int(str_id) for str_id in qs.split(',')]
 
     def get_queryset(self):
@@ -83,15 +84,15 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @action(methods=['POST'], detail=True, url_path='upload-image')
     def upload_image(self, request, pk=None):
-        """Upload an image to a recipe."""
+        """Upload an image to recipe."""
         recipe = self.get_object()
-        serializer = self.get_serializer(recipe, data=request.data,)
+        serializer = self.get_serializer(recipe, data=request.data)
 
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK,)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST,)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @extend_schema_view(
@@ -109,7 +110,7 @@ class BaseRecipeAttrViewSet(mixins.DestroyModelMixin,
                             mixins.UpdateModelMixin,
                             mixins.ListModelMixin,
                             viewsets.GenericViewSet):
-    """Base viewset for user owned recipe attributes."""
+    """Base viewset for recipe attributes."""
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
